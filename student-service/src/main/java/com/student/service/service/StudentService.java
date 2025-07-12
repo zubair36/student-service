@@ -7,6 +7,9 @@ import com.student.service.repo.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class StudentService {
 
@@ -33,5 +36,43 @@ public class StudentService {
         studentResponseDTO.setRollNumber(responseEntity.getRollNumber());
 
         return studentResponseDTO;
+    }
+
+    public String deleteStudent(Long id){
+        studentRepository.deleteById(id);
+        return "Student Deleted Successfully!!";
+    }
+
+    public StudentResponseDTO getStudentById(Long id){
+        StudentEntity studentEntity = studentRepository.findById(id).get();
+        StudentResponseDTO responseDTO = new StudentResponseDTO();
+        responseDTO.setStudentId(studentEntity.getId());
+        responseDTO.setRollNumber(studentEntity.getRollNumber());
+        return responseDTO;
+    }
+
+    public StudentResponseDTO getStudentByEmail(String email){
+        List<StudentEntity> list = studentRepository.findByEmail(email);
+        StudentResponseDTO responseDTO = new StudentResponseDTO();
+//        responseDTO.setStudentId(studentEntity.getId());
+//        responseDTO.setRollNumber(studentEntity.getRollNumber());
+        return null;
+    }
+
+    public StudentResponseDTO getStudentByEmailAndName(String email, String name){
+        StudentEntity studentEntity = studentRepository.findByEmailAndName(email, name);
+        StudentResponseDTO responseDTO = new StudentResponseDTO();
+        responseDTO.setStudentId(studentEntity.getId());
+        responseDTO.setRollNumber(studentEntity.getRollNumber());
+        return responseDTO;
+    }
+
+    public String getStudentByName(String name){
+        Optional<StudentEntity> studentEntity = studentRepository.findByName(name);
+//        boolean flag = studentEntity.isPresent();
+        if(studentEntity.isPresent()){
+            return "Student Exist";
+        }
+        return "Student Doesn't exist!!";
     }
 }
